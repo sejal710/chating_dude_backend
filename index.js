@@ -5,12 +5,14 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
 const app = express();
+const socket = require("socket.io");
+require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
 
 mongoose
-  .connect("mongodb+srv://sejal:sejal@cluster0.iv2p69r.mongodb.net/chat?retryWrites=true&w=majority", {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -24,8 +26,8 @@ mongoose
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-const server = app.listen(8080, () =>
-  console.log(`Server started on 8080`)
+const server = app.listen(process.env.PORT, () =>
+  console.log(`Server started on ${process.env.PORT}`)
 );
 const io = socket(server, {
   cors: {
